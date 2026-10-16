@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Disallow: /wp-includes/
+Disallow: /trackback/
+Disallow: /xmlrpc.php
+Disallow: /readme.html
+Disallow: /*?*
+Disallow: /*?
+
+Sitemap: https://adamasuniversity.ac.in/sitemap_index.xml
