@@ -157,3 +157,125 @@ add_filter( 'wpcf7_spam', function ( $spam ) {
     }
     return $spam;
 } );
+
+/**
+ * 8. Comprehensive File Upload Security Shield
+ */
+
+// A. Filter allowed MIME types to remove dangerous/executable types
+add_filter( 'upload_mimes', function ( $mimes ) {
+    $blocked = array(
+        'html|htm',
+        'js',
+        'php',
+        'phtml',
+        'php3',
+        'php4',
+        'php5',
+        'php7',
+        'php8',
+        'phar',
+        'sh',
+        'py',
+        'pl',
+        'cgi',
+        'exe',
+        'bat',
+        'cmd',
+        'bin',
+        'dll',
+        'msi',
+    );
+    foreach ( $blocked as $ext ) {
+        unset( $mimes[ $ext ] );
+    }
+    return $mimes;
+}, 999 );
+
+// B. Deep Pre-Upload Validation (Double extensions, real image verification, SVG XSS inspection)
+add_filter( 'wp_handle_upload_prefilter', 'adamas_validate_file_upload' );
+add_filter( 'wp_handle_sideload_prefilter', 'adamas_validate_file_upload' );
+
+function adamas_validate_file_upload( $file ) {
+    if ( ! empty( $file['error'] ) ) {
+        return $file;
+    }
+
+    $filename = isset( $file['name'] ) ? (string) $file['name'] : '';
+    $tmp_path = isset( $file['tmp_name'] ) ? (string) $file['tmp_name'] : '';
+
+    if ( empty( $filename ) ) {
+        return $file;
+    }
+
+    // 1. Check for null bytes or control characters
+    if ( strpos( $filename, "\0" ) !== false || preg_match( '/[\x00-\x1F\x7F]/', $filename ) ) {
+        $file['error'] = __( 'Security Alert: File name contains invalid or hidden characters.', 'default' );
+        return $file;
+    }
+
+    // 2. Reject double extensions targeting script execution (e.g., shell.php.jpg or image.phtml.png)
+    $dangerous_patterns = '/\.(php[0-9]?|phtml|phtm|phar|pl|py|cgi|sh|bash|exe|bat|cmd|msi|vbs|js|html|htm)\./i';
+    if ( preg_match( $dangerous_patterns, $filename ) ) {
+        $file['error'] = __( 'Security Alert: Multi-extension files containing executable scripts are strictly prohibited.', 'default' );
+        return $file;
+    }
+
+    // 3. Inspect final extension
+    $ext = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+    $executable_exts = array(
+        'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phtm',
+        'phar', 'pl', 'py', 'cgi', 'sh', 'bash', 'exe', 'bat', 'cmd', 'msi', 'vbs',
+        'html', 'htm', 'shtml', 'svgz'
+    );
+    if ( in_array( $ext, $executable_exts, true ) ) {
+        $file['error'] = __( 'Security Alert: Direct upload of executable or script formats is forbidden.', 'default' );
+        return $file;
+    }
+
+    // 4. Image Real-Format Verification (Anti-Polyglot / Disguised scripts)
+    $image_exts = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp' );
+    if ( in_array( $ext, $image_exts, true ) && ! empty( $tmp_path ) && file_exists( $tmp_path ) ) {
+        $image_info = @getimagesize( $tmp_path );
+        if ( false === $image_info || empty( $image_info[0] ) || empty( $image_info[1] ) ) {
+            $file['error'] = __( 'Security Alert: The uploaded image is invalid or corrupted.', 'default' );
+            return $file;
+        }
+    }
+
+    // 5. Deep SVG Sanitization & Malicious Script Scan (Stored XSS Protection)
+    if ( 'svg' === $ext && ! empty( $tmp_path ) && file_exists( $tmp_path ) ) {
+        $svg_content = file_get_contents( $tmp_path );
+        if ( false !== $svg_content ) {
+            $xss_patterns = array(
+                '/<script/i',
+                '/javascript\s*:/i',
+                '/data\s*:\s*text\/html/i',
+                '/onload\s*=/i',
+                '/onerror\s*=/i',
+                '/onclick\s*=/i',
+                '/onmouseover\s*=/i',
+                '/onfocus\s*=/i',
+                '/<foreignObject/i',
+                '/<iframe/i',
+                '/<embed/i',
+                '/<object/i',
+            );
+
+            foreach ( $xss_patterns as $pattern ) {
+                if ( preg_match( $pattern, $svg_content ) ) {
+                    $file['error'] = __( 'Security Alert: SVG file contains insecure elements or embedded scripts.', 'default' );
+                    return $file;
+                }
+            }
+        }
+    }
+
+    return $file;
+}
+
+// C. Sanitize uploaded file names to avoid directory traversal or special character tricks
+add_filter( 'sanitize_file_name', function ( $filename ) {
+    return preg_replace( '/\.{2,}/', '.', $filename );
+}, 10, 1 );
+

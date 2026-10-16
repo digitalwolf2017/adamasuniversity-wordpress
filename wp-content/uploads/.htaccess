@@ -1,5 +1,5 @@
 # Disable execution of scripts in uploads directory
-<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|phps|pht|phar|pl|py|cgi|sh|bash)$">
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phps|pht|phtm|phar|pl|py|pyc|pyo|cgi|sh|bash|exe|bin|bat|cmd|msi|vbs|js|html|htm)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -8,3 +8,20 @@
         Deny from all
     </IfModule>
 </FilesMatch>
+
+# Turn off script engines and CGI
+Options -ExecCGI
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Force default static file handler
+<Files *>
+    SetHandler default-handler
+</Files>
