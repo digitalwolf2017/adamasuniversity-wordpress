@@ -1,4 +1,6 @@
 <?php
+define( 'WP_CACHE', true );
+
 /**
  * The base configuration for WordPress
  *
@@ -20,13 +22,13 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'adamasdb' );
+define( 'DB_NAME', 'u202799095_adamas' );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'u202799095_adamas' );
 
 /** Database password */
-define( 'DB_PASSWORD', '' );
+define( 'DB_PASSWORD', '+u@#B/2|xN' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
@@ -91,6 +93,7 @@ define( 'WP_DEBUG', false );
 
 
 
+define( 'WP_AUTO_UPDATE_CORE', true );
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */
