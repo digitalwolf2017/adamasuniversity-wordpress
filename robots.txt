@@ -7,4 +7,4 @@ Disallow: /xmlrpc.php
 Disallow: /readme.html
 Disallow: /*?*
 Disallow: /*?
-Sitemap: https://theperspectiveshift.digitalwolf.co.in/sitemap.xml
+Sitemap: https://tps.digitalwolf.co.in/sitemap.xml
