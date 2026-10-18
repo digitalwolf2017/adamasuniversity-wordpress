@@ -19,15 +19,55 @@
    1. STICKY HEADER ON SCROLL
    ========================================================================== */
 
-/* Keep masthead stuck to the viewport top */
+/* Keep masthead stuck to the viewport top (z-index below modals/lightbox) */
 #masthead {
     position: sticky !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
-    z-index: 99999 !important;
+    z-index: 1000 !important;
     transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* Ensure Elementor Lightbox & Close (X) Button are ALWAYS above the sticky header */
+.dialog-widget.dialog-lightbox-widget,
+.dialog-widget.elementor-lightbox,
+.elementor-lightbox {
+    z-index: 9999999 !important;
+}
+
+.elementor-lightbox .dialog-close-button,
+.dialog-widget.dialog-lightbox-widget .dialog-close-button {
+    z-index: 99999999 !important;
+    cursor: pointer !important;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 44px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 50% !important;
+    color: #ffffff !important;
+    transition: all 0.25s ease !important;
+}
+
+.elementor-lightbox .dialog-close-button:hover,
+.dialog-widget.dialog-lightbox-widget .dialog-close-button:hover {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+    transform: scale(1.1) !important;
+}
+
+/* Prevent background page from scrolling when video lightbox is open */
+body.elementor-lightbox--open,
+html.elementor-lightbox--open {
+    overflow: hidden !important;
+    height: 100% !important;
+    touch-action: none !important;
 }
 
 /* Offset for WordPress Admin Bar when logged in */
