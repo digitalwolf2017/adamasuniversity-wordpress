@@ -101,9 +101,43 @@
         });
     }
 
+    /**
+     * Copy Article Link to Clipboard
+     */
+    function initCopyLinkButton() {
+        $(document).on('click', '.share-copy', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var url = $btn.data('url') || window.location.href;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(function () {
+                    showCopyFeedback($btn);
+                });
+            } else {
+                var $temp = $('<input>');
+                $('body').append($temp);
+                $temp.val(url).select();
+                document.execCommand('copy');
+                $temp.remove();
+                showCopyFeedback($btn);
+            }
+        });
+
+        function showCopyFeedback($btn) {
+            var originalHtml = $btn.html();
+            $btn.html('<i class="fas fa-check"></i>').css('background', '#10b981');
+            setTimeout(function () {
+                $btn.html(originalHtml).css('background', '');
+            }, 2000);
+        }
+    }
+
     $(document).ready(function () {
         initStickyHeader();
         initLightboxScrollLock();
+        initCopyLinkButton();
     });
 
 })(jQuery);
+

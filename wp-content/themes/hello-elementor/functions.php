@@ -289,3 +289,9 @@ if ( ! function_exists( 'hello_elementor_body_open' ) ) {
 require HELLO_THEME_PATH . '/theme.php';
 
 HelloTheme\Theme::instance();
+
+/**
+ * Load Dynamic Blog Templates & Helper Functions
+ */
+require_once get_template_directory() . '/includes/blog-functions.php';
+
