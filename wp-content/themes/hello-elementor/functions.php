@@ -158,6 +158,21 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 				HELLO_ELEMENTOR_VERSION
 			);
 		}
+
+		wp_enqueue_style(
+			'hello-elementor-custom-style',
+			get_template_directory_uri() . '/style.css',
+			[ 'hello-elementor-theme-style' ],
+			HELLO_ELEMENTOR_VERSION
+		);
+
+		wp_enqueue_script(
+			'hello-elementor-custom-header',
+			HELLO_THEME_SCRIPTS_URL . 'custom-header.js',
+			[ 'jquery' ],
+			HELLO_ELEMENTOR_VERSION,
+			true
+		);
 	}
 }
 add_action( 'wp_enqueue_scripts', 'hello_elementor_scripts_styles' );
