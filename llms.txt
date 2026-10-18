@@ -3,9 +3,7 @@
 
 ## Posts
 
-- [Blog 3](https://adamas.digitalwolf.co.in/2026/10/16/blog-3/): It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-- [Blog 2](https://adamas.digitalwolf.co.in/2026/10/16/blog-2/): It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-- [Hello world!](https://adamas.digitalwolf.co.in/2026/10/09/hello-world/): Welcome to WordPress. This is your first post. Edit or delete it, then start writing!
+- [Blog new](https://adamas.digitalwolf.co.in/2026/10/16/blog-3/): It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
 
 ## Pages
 
